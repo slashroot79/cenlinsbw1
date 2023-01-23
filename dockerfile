@@ -31,9 +31,9 @@ RUN rm -rf webapps/*
 COPY target/cenlinsbw1-0.0.1-SNAPSHOT.war webapps/ROOT.war
 
 #Install and configure ssh
-COPY sshd_config /etc/ssh
 RUN yum install -y openssh-server openssh-clients
 RUN echo "root:Docker!" | chpasswd
+COPY sshd_config /etc/ssh/
 
 #Custom startup script to launch multiple services when not using supervisord
 COPY start.sh .

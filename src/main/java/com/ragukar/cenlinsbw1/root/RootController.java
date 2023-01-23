@@ -25,6 +25,6 @@ public class RootController {
 	
 	@GetMapping("/test")
 	public String test() {
-		return "Test endpoint...";
+		return "test endpoint for endpoint test";
 	}
 }
