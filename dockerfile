@@ -1,12 +1,11 @@
-
 #docker search registry.access.redhat.com/ubi
 FROM registry.access.redhat.com/ubi9
 LABEL maintainer="Ragu Karuturi"
 
-#Install java v17 and set env v	ars
-RUN yum update -y && yum install -y java-17
-ENV JAVA_HOME  /usr/lib/jvm/java-17-openjdk-17.0.5.0.8-2.el9_0.x86_64
-ENV PATH $PATH:/usr/lib/jvm/java-17-openjdk-17.0.5.0.8-2.el9_0.x86_64/bin
+#Install java v17 and set env vars
+RUN yum update -y && yum install -y java-17-openjdk
+ENV JAVA_HOME  /etc/alternatives/jre_17_openjdk
+ENV PATH $PATH:$JAVA_HOME/bin
 
 #Download and install tomcat v10
 RUN curl -k https://archive.apache.org/dist/tomcat/tomcat-10/v10.0.27/bin/apache-tomcat-10.0.27.tar.gz -o /tmp/apache-tomcat-10.0.27.tar.gz 
@@ -33,23 +32,23 @@ COPY target/cenlinsbw1-0.0.1-SNAPSHOT.war webapps/ROOT.war
 #Install and configure ssh
 RUN yum install -y openssh-server openssh-clients
 RUN echo "root:Docker!" | chpasswd
-COPY sshd_config /etc/ssh/
+COPY sshd_config /etc/ssh
 
-#Custom startup script to launch multiple services when not using supervisord
+#Custom startup script to launch multiple services.
 COPY start.sh .
 RUN chmod +x start.sh
 
-#Install EPEL (extra packages for enterprise linux) needed for supervisord
+#Install EPEL (extra packages for enterprise linux) needed for supervisord.
 RUN dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
 
 #Install supervisor. Requires a python runtime. 
 RUN yum install -y supervisor
 
-#Expose app and ssh ports
+#Expose app and ssh ports.
 EXPOSE 8080 2222
 
-#Start supervisord in exec mode with PID 1
-ENTRYPOINT ./start.sh
+#Start shell script (exec mode).
+ENTRYPOINT ["./start.sh"]
 
 
 
