@@ -50,5 +50,3 @@ EXPOSE 8080 2222
 #Start shell script (exec mode).
 ENTRYPOINT ["./start.sh"]
 
-
-
