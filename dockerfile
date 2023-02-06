@@ -23,6 +23,8 @@ RUN chown -R tomcat: /usr/local/tomcat
 #Install basic tools. 
 RUN yum install procps -y \
 	&& yum install net-tools -y \
+	&& yum install bind-utils -y \
+	&& yum install nmap -y \
 	&& yum install sudo -y
 
 #Delete existing apps and copy primary build artifact
@@ -37,12 +39,6 @@ COPY sshd_config /etc/ssh
 #Custom startup script to launch multiple services.
 COPY start.sh .
 RUN chmod +x start.sh
-
-#Install EPEL (extra packages for enterprise linux) needed for supervisord.
-RUN dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
-
-#Install supervisor. Requires a python runtime. 
-RUN yum install -y supervisor
 
 #Expose app and ssh ports.
 EXPOSE 8080 2222
